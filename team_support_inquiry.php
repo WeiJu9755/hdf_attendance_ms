@@ -163,7 +163,14 @@ if ($mDB->rowCount() > 0) {
 $select_team2 .= "</select>";
 
 //載入團隊工地
-$Qry="select construction_id,construction_site from construction order by auto_seq";
+$Qry="SELECT 
+  construction_id,
+  construction_site,
+  Year_of_entry 
+FROM 
+  construction 
+ORDER BY 
+  Year_of_entry DESC;";
 $mDB->query($Qry);
 
 $select_team_construction = "";
