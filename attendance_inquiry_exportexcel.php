@@ -105,6 +105,7 @@ $web_id = "sales.eshop";
 
 $company_id = $_GET['company_id'];
 $m_team_id = $_GET['team_id'];
+$team_id = $_GET['team_id'];
 
 $m_team_name = "";
 
