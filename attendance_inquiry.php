@@ -204,7 +204,7 @@ if (!empty($team_id)) {
 	LEFT JOIN dispatch_member b ON b.dispatch_id = a.dispatch_id
 	LEFT JOIN employee c ON c.employee_id = b.employee_id
 	LEFT JOIN team d ON d.team_id = c.team_id
-	WHERE a.dispatch_date >= '$start_date' AND a.dispatch_date <= '$end_date' AND a.ConfirmSending = 'Y' AND a.company_id = '$company_id' AND a.team_id = '$team_id'
+	WHERE a.dispatch_date >= '$start_date' AND a.dispatch_date <= '$end_date' AND a.ConfirmSending = 'Y' AND a.company_id = '$company_id' AND c.team_id = '$team_id'
 	GROUP BY b.employee_id
 	ORDER BY c.team_id,b.employee_id";
 } else {
