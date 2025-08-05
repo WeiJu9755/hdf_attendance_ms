@@ -203,7 +203,7 @@ $mDB2 = new MywebDB();
 $get_construction_id = trim($_GET['construction_id'] ?? '');
 // 查詢所有需要處理的工地資料
 if($_GET['company_id']!=""){
-$Qry="SELECT a.dispatch_id,YEAR(a.dispatch_date) AS dispatch_year,MONTH(a.dispatch_date) AS dispatch_month,DAY(a.dispatch_date) AS dispatch_day
+$Qry="SELECT a.dispatch_id,a.company_id,YEAR(a.dispatch_date) AS dispatch_year,MONTH(a.dispatch_date) AS dispatch_month,DAY(a.dispatch_date) AS dispatch_day
 ,b.construction_id,c.construction_site,b.building,b.household,b.floor,b.attendance_status,b.team_id,d.team_name,b.manpower,b.workinghours FROM dispatch a
 LEFT JOIN dispatch_construction b ON b.dispatch_id = a.dispatch_id
 LEFT JOIN construction c ON c.construction_id = b.construction_id
@@ -216,7 +216,7 @@ $Qry .="GROUP BY b.construction_id
 		ORDER BY b.construction_id";
 
 }else{
-	$Qry="SELECT a.dispatch_id,YEAR(a.dispatch_date) AS dispatch_year,MONTH(a.dispatch_date) AS dispatch_month,DAY(a.dispatch_date) AS dispatch_day
+	$Qry="SELECT a.dispatch_id,a.company_id,YEAR(a.dispatch_date) AS dispatch_year,MONTH(a.dispatch_date) AS dispatch_month,DAY(a.dispatch_date) AS dispatch_day
 ,b.construction_id,c.construction_site,b.building,b.household,b.floor,b.attendance_status,b.team_id,d.team_name,b.manpower,b.workinghours FROM dispatch a
 LEFT JOIN dispatch_construction b ON b.dispatch_id = a.dispatch_id
 LEFT JOIN construction c ON c.construction_id = b.construction_id
@@ -238,6 +238,7 @@ while ($row = $mDB->fetchRow(2)) {
 	$construction_sites[] = [
 		'construction_id' => $row['construction_id'],
 		'construction_site' => $row['construction_site'],
+        'get_company_id' => $row['company_id'],
 	];
 }
 
@@ -250,6 +251,7 @@ $selected_status = trim($_GET['attendance_status'] ?? '');
 foreach ($construction_sites as $site) {
     $construction_id = $site['construction_id'];
     $site_name = $site['construction_site'];
+    $get_company_id = $site['get_company_id'];
 
     // 查詢單一工地的詳細派工資料
     $Qry2 = "SELECT 
@@ -264,7 +266,8 @@ foreach ($construction_sites as $site) {
     WHERE a.dispatch_date >= '$start_date' 
       AND a.dispatch_date <= '$end_date' 
       AND a.ConfirmSending = 'Y' 
-      AND b.construction_id = '$construction_id'";
+      AND b.construction_id = '$construction_id'
+      AND a.company_id = '$get_company_id'";
 
       if(!empty($selected_status)){
 			$Qry2 .= " AND b.attendance_status = '$selected_status'";

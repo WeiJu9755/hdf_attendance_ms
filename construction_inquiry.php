@@ -212,7 +212,7 @@ $show_inquiry = "";
 
 //取得工地資料
 if($_GET['company_id']!=""){
-$Qry="SELECT a.dispatch_id,YEAR(a.dispatch_date) AS dispatch_year,MONTH(a.dispatch_date) AS dispatch_month,DAY(a.dispatch_date) AS dispatch_day
+$Qry="SELECT a.dispatch_id,a.company_id,YEAR(a.dispatch_date) AS dispatch_year,MONTH(a.dispatch_date) AS dispatch_month,DAY(a.dispatch_date) AS dispatch_day
 ,b.construction_id,c.construction_site,b.building,b.household,b.floor,b.attendance_status,b.team_id,d.team_name,b.manpower,b.workinghours FROM dispatch a
 LEFT JOIN dispatch_construction b ON b.dispatch_id = a.dispatch_id
 LEFT JOIN construction c ON c.construction_id = b.construction_id
@@ -225,7 +225,7 @@ $Qry .="GROUP BY b.construction_id
 		ORDER BY b.construction_id";
 
 }else{
-	$Qry="SELECT a.dispatch_id,YEAR(a.dispatch_date) AS dispatch_year,MONTH(a.dispatch_date) AS dispatch_month,DAY(a.dispatch_date) AS dispatch_day
+	$Qry="SELECT a.dispatch_id,a.company_id,YEAR(a.dispatch_date) AS dispatch_year,MONTH(a.dispatch_date) AS dispatch_month,DAY(a.dispatch_date) AS dispatch_day
 ,b.construction_id,c.construction_site,b.building,b.household,b.floor,b.attendance_status,b.team_id,d.team_name,b.manpower,b.workinghours FROM dispatch a
 LEFT JOIN dispatch_construction b ON b.dispatch_id = a.dispatch_id
 LEFT JOIN construction c ON c.construction_id = b.construction_id
@@ -285,6 +285,7 @@ EOT;
 		$dispatch_day = $row['dispatch_day'];
 		$construction_id = $row['construction_id'];
 		$construction_site = $row['construction_site'];
+		$get_company_id = $row['company_id'];
 		
 
 		$seq++;
@@ -296,7 +297,7 @@ EOT;
 			LEFT JOIN dispatch_construction b ON b.dispatch_id = a.dispatch_id
 			LEFT JOIN construction c ON c.construction_id = b.construction_id
 			LEFT JOIN team d ON d.team_id = b.team_id
-			WHERE a.dispatch_date >= '$start_date' AND a.dispatch_date <= '$end_date' AND a.ConfirmSending = 'Y' AND b.construction_id = '$construction_id'";
+			WHERE a.dispatch_date >= '$start_date' AND a.dispatch_date <= '$end_date' AND a.ConfirmSending = 'Y' AND b.construction_id = '$construction_id' AND a.company_id = '$get_company_id'";
 
 		if(!empty($selected_status)){
 			$Qry2 .= " AND b.attendance_status = '$selected_status'";
@@ -505,7 +506,7 @@ $show_report=<<<EOT
 				<button type="button" class="btn btn-success" onclick="chdatetime();"><i class="fas fa-check"></i>&nbsp;查詢</button>
 			</div>
 			<div class="inline text-nowrap">
-				<a $show_disabled type="button" class="btn btn-primary" href="/index.php?ch=construction_inquiry_exportexcel&company_id=$company_id&construction_id=$get_construction_id &attendance_status=$selected_status&start_date=$start_date&end_date=$end_date&fm=$fm"><i class="bi bi-filetype-xls"></i>&nbsp;匯出Excel</a>
+				<a  type="button" class="btn btn-primary" href="/index.php?ch=construction_inquiry_exportexcel&company_id=$company_id&construction_id=$get_construction_id &attendance_status=$selected_status&start_date=$start_date&end_date=$end_date&fm=$fm"><i class="bi bi-filetype-xls"></i>&nbsp;匯出Excel</a>
 			</div>
 		</div>
 	</div>
